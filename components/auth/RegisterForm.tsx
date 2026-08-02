@@ -20,7 +20,7 @@ export default function RegisterForm() {
 
     try {
       await api.post("/auth/register", { name, email, password });
-      router.push("/login?registered=true");
+      router.push("/auth/login?registered=true");
     } catch (err: any) {
       const msg = err.response?.data?.message;
       setError(
@@ -98,7 +98,7 @@ export default function RegisterForm() {
       <p className="mt-6 text-center text-xs text-slate-500">
         Sudah punya akun?{" "}
         <Link
-          href="/login"
+          href="/auth/login"
           className="font-semibold text-blue-600 hover:underline"
         >
           Masuk di sini

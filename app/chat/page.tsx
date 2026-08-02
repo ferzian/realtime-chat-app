@@ -23,7 +23,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     const token = Cookies.get("token");
-    if (!token) return router.push("/login");
+    if (!token) return router.push("/auth/login");
 
     api
       .get("/rooms")
@@ -42,17 +42,25 @@ export default function ChatPage() {
   }, [router]);
 
   useEffect(() => {
-    if (!activeRoomId) return;
+    const token = Cookies.get("token");
+    if (!token) return router.push("/auth/login");
 
     api
-      .get(`/messages/${activeRoomId}`)
-      .then((res) => setMessages(res.data.data || res.data));
+      .get("/rooms")
+      .then((res) => {
+        setRooms(res.data.data || []);
+      })
+      .catch((err) => {
+        console.error("Gagal mengambil daftar room:", err);
+        setRooms([]);
+      })
+      .finally(() => setLoading(false));
 
     if (socketRef.current) {
       socketRef.current.emit("joinRoom", { roomId: activeRoomId });
       socketRef.current.emit("markAsRead", { roomId: activeRoomId });
     }
-  }, [activeRoomId]);
+  }, [router]);
 
   const handleSendMessage = (text: string) => {
     if (!activeRoomId || !socketRef.current) return;
@@ -65,7 +73,7 @@ export default function ChatPage() {
   const handleLogout = () => {
     Cookies.remove("token");
     disconnectSocket();
-    router.push("/login");
+    router.push("/auth/login");
   };
 
   if (loading)

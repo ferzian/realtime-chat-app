@@ -11,13 +11,13 @@ export default function HomePage() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="/login"
+            href="/auth/login"
             className="flex-1 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition shadow-md shadow-blue-500/20"
           >
             Masuk
           </Link>
           <Link
-            href="/register"
+            href="/auth/register"
             className="flex-1 rounded-xl bg-slate-100 px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition border border-slate-200"
           >
             Daftar

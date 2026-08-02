@@ -26,9 +26,9 @@ api.interceptors.response.use(
       Cookies.remove("token");
       if (
         typeof window !== "undefined" &&
-        window.location.pathname !== "/login"
+        window.location.pathname !== "/auth/login"
       ) {
-        window.location.href = "/login";
+        window.location.href = "/auth/login";
       }
     }
     return Promise.reject(error);

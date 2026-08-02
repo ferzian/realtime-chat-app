@@ -1,18 +1,31 @@
-import { Room } from "@/types/chat";
+import { Room } from '@/types/chat';
 
 interface SidebarProps {
   rooms: Room[];
   activeRoomId: number | null;
+  currentUserId?: number;
   onSelectRoom: (id: number) => void;
   onLogout: () => void;
 }
 
 export default function Sidebar({
-  rooms,
+  rooms = [],
   activeRoomId,
+  currentUserId,
   onSelectRoom,
   onLogout,
 }: SidebarProps) {
+  const safeRooms = Array.isArray(rooms) ? rooms : [];
+
+  const getRoomName = (room: Room) => {
+    if (room.isGroup) {
+      return room.name || `Grup #${room.id}`;
+    }
+    
+    const partner = room.participants?.find((p) => p.userId !== currentUserId);
+    return partner?.user?.username || room.participants?.[0]?.user?.username || `Chat #${room.id}`;
+  };
+
   return (
     <div className="w-1/3 max-w-xs bg-white border-r border-slate-200 flex flex-col">
       <div className="p-4 border-b border-slate-200 flex justify-between items-center">
@@ -26,12 +39,12 @@ export default function Sidebar({
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {rooms.length === 0 ? (
+        {safeRooms.length === 0 ? (
           <p className="p-4 text-xs text-slate-400 text-center">
             Belum ada obrolan
           </p>
         ) : (
-          rooms.map((room) => (
+          safeRooms.map((room) => (
             <div
               key={room.id}
               onClick={() => onSelectRoom(room.id)}
@@ -42,7 +55,7 @@ export default function Sidebar({
               }`}
             >
               <p className="font-semibold text-slate-800 text-sm">
-                {room.name || `Room #${room.id}`}
+                {getRoomName(room)}
               </p>
               {room.messages && room.messages.length > 0 && (
                 <p className="text-xs text-slate-400 truncate mt-0.5">

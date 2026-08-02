@@ -83,7 +83,7 @@ export default function LoginForm() {
       <p className="mt-6 text-center text-xs text-slate-500">
         Belum punya akun?{" "}
         <Link
-          href="/register"
+          href="/auth/register"
           className="font-semibold text-blue-600 hover:underline"
         >
           Daftar di sini

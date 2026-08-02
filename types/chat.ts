@@ -1,11 +1,24 @@
-export interface Message {
+export interface Participant {
   id: number;
-  content: string;
-  isDeleted?: boolean;
+  userId: number;
+  role: string;
+  user: {
+    id: number;
+    username: string;
+  };
 }
 
 export interface Room {
   id: number;
+  isGroup: boolean;
   name?: string;
-  messages?: Array<{ content: string }>;
+  participants: Participant[];
+  messages?: Array<{ content: string; createdAt: string }>;
+}
+
+export interface Message {
+  id: number;
+  content: string;
+  senderId?: number;
+  isDeleted?: boolean;
 }
