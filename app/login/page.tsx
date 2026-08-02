@@ -18,16 +18,13 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Sesuaikan endpoint ini dengan endpoint auth di backend temanmu
       const res = await api.post("/auth/login", { email, password });
 
-      // Asumsi backend mengembalikan { access_token: "..." }
       const token = res.data.access_token || res.data.token;
 
       if (token) {
-        // Simpan token ke cookie (berlaku 7 hari)
         Cookies.set("token", token, { expires: 7 });
-        router.push("/chat"); // Redirect ke halaman chat utama
+        router.push("/chat"); 
       }
     } catch (err: any) {
       setError(
@@ -45,7 +42,7 @@ export default function LoginPage() {
         className="w-full max-w-md rounded-lg bg-white p-6 shadow-md"
       >
         <h2 className="mb-6 text-2xl font-bold text-center">
-          Login Chat Engine
+          Login Realtime Chat
         </h2>
 
         {error && (
