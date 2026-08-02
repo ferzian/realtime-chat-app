@@ -1,107 +1,13 @@
-"use client";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import Cookies from "js-cookie";
-import api from "@/lib/axios";
+import AuthLayout from "@/components/auth/AuthLayout";
+import LoginForm from "@/components/auth/LoginForm";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    try {
-      const res = await api.post("/auth/login", { email, password });
-      const token = res.data.access_token || res.data.token;
-
-      if (token) {
-        Cookies.set("token", token, { expires: 7 });
-        router.push("/chat");
-      }
-    } catch (err: any) {
-      const msg = err.response?.data?.message;
-      setError(
-        Array.isArray(msg)
-          ? msg.join(", ")
-          : msg || "Login gagal. Periksa email & password.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg border border-slate-100">
-        <h2 className="text-2xl font-bold text-slate-800 text-center mb-2">
-          Masuk ke Akun
-        </h2>
-        <p className="text-xs text-slate-500 text-center mb-6">
-          Masukkan email dan password kamu
-        </p>
-
-        {error && (
-          <div className="mb-4 text-xs font-medium text-red-600 bg-red-50 p-3 rounded-lg border border-red-100">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              placeholder="user@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 p-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-black"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 p-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-black"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 transition shadow-md shadow-blue-500/20"
-          >
-            {loading ? "Memproses..." : "Masuk"}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-xs text-slate-500">
-          Belum punya akun?{" "}
-          <Link
-            href="/register"
-            className="font-semibold text-blue-600 hover:underline"
-          >
-            Daftar di sini
-          </Link>
-        </p>
-      </div>
-    </div>
+    <AuthLayout
+      title="Masuk ke Akun"
+      subtitle="Masukkan email dan password anda"
+    >
+      <LoginForm />
+    </AuthLayout>
   );
 }
