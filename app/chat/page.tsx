@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import api from "@/lib/axios";
-import { getSocket, disconnectSocket } from "@/lib/socket";
+import { connectSocket, disconnectSocket } from "@/lib/socket";
 import { Message, Room } from "@/types/chat";
 import { MessageSquare, LogOut, User } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -56,17 +56,25 @@ export default function ChatPage() {
 
     fetchRooms();
 
-    const socket = getSocket();
-    socket.connect();
+    const socket = connectSocket();
     socketRef.current = socket;
+
+    socket.on("connect", () => {
+      console.log("🟢 Connected to Socket:", socket.id);
+    });
 
     socket.on("newMessage", (newMsg: Message) => {
       setMessages((prev) => [...prev, newMsg]);
     });
 
+    socket.on("exception", (err: any) => {
+      console.error("🚨 WsJwtGuard Error:", err);
+    });
+
     return () => {
+      socket.off("connect");
       socket.off("newMessage");
-      disconnectSocket();
+      socket.off("exception");
     };
   }, [router, fetchRooms]);
 
@@ -76,11 +84,12 @@ export default function ChatPage() {
     api
       .get(`/messages/${activeRoomId}`)
       .then((res) => setMessages(res.data.data || res.data || []))
-      .catch((err) => console.error("Failed to fetch messages:", err));
+      .catch((err) => console.error("Gagal mengambil pesan:", err));
 
-    if (socketRef.current) {
-      socketRef.current.emit("joinRoom", { roomId: activeRoomId });
-      socketRef.current.emit("markAsRead", { roomId: activeRoomId });
+    if (socketRef.current && socketRef.current.connected) {
+      console.log(`Emitting joinRoom for room: ${activeRoomId}`);
+      socketRef.current.emit("joinRoom", { roomId: Number(activeRoomId) });
+      socketRef.current.emit("markAsRead", { roomId: Number(activeRoomId) });
     }
   }, [activeRoomId]);
 
@@ -88,7 +97,7 @@ export default function ChatPage() {
     if (!activeRoomId || !socketRef.current) return;
 
     socketRef.current.emit("sendMessage", {
-      roomId: activeRoomId,
+      roomId: Number(activeRoomId),
       content: text,
     });
   };
@@ -98,8 +107,6 @@ export default function ChatPage() {
     disconnectSocket();
     router.push("/auth/login");
   };
-
-  const activeRoom = rooms.find((r) => r.id === activeRoomId);
 
   if (loading) {
     return (
@@ -122,7 +129,8 @@ export default function ChatPage() {
             <MessageSquare className="w-5 h-5 fill-white/20" />
           </div>
           <span className="font-bold text-lg text-slate-900 dark:text-white tracking-tight">
-            Realtime<span className="text-amber-600 dark:text-amber-500">Chat</span>
+            Realtime
+            <span className="text-amber-600 dark:text-amber-500">Chat</span>
           </span>
         </Link>
 
@@ -166,12 +174,8 @@ export default function ChatPage() {
         <main className="flex-1 flex flex-col bg-slate-50/50 dark:bg-slate-950/50 relative min-w-0">
           {activeRoomId ? (
             <>
-              <ChatHeader
-                roomId={activeRoomId}
-                room={activeRoom}
-                currentUserId={currentUserId}
-              />
-              <MessageList messages={messages} currentUserId={currentUserId} />
+              <ChatHeader roomId={activeRoomId} />
+              <MessageList messages={messages} />
               <ChatInput onSendMessage={handleSendMessage} />
             </>
           ) : (
