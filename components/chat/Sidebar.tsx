@@ -19,7 +19,7 @@ export default function Sidebar({
 
   const getRoomName = (room: Room) => {
     if (room.isGroup) {
-      return room.name || `Grup #${room.id}`;
+      return room.name || `Group #${room.id}`;
     }
     
     const partner = room.participants?.find((p) => p.userId !== currentUserId);
@@ -29,19 +29,19 @@ export default function Sidebar({
   return (
     <div className="w-1/3 max-w-xs bg-white border-r border-slate-200 flex flex-col">
       <div className="p-4 border-b border-slate-200 flex justify-between items-center">
-        <h1 className="font-bold text-slate-800 text-lg">Pesan</h1>
+        <h1 className="font-bold text-slate-800 text-lg">Messages</h1>
         <button
           onClick={onLogout}
           className="text-xs text-red-600 hover:underline font-semibold"
         >
-          Keluar
+          Sign Out
         </button>
       </div>
 
       <div className="flex-1 overflow-y-auto">
         {safeRooms.length === 0 ? (
           <p className="p-4 text-xs text-slate-400 text-center">
-            Belum ada obrolan
+            No conversations yet
           </p>
         ) : (
           safeRooms.map((room) => (

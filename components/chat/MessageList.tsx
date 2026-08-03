@@ -9,7 +9,7 @@ export default function MessageList({ messages }: { messages: Message[] }) {
             <p className="text-sm text-slate-800">
               {msg.isDeleted ? (
                 <span className="italic text-slate-400">
-                  🚫 Pesan ini telah dihapus
+                  🚫 This message was deleted
                 </span>
               ) : (
                 msg.content

@@ -21,7 +21,7 @@ export default function ChatInput({
     >
       <input
         type="text"
-        placeholder="Ketik pesan..."
+        placeholder="Type a message..."
         value={text}
         onChange={(e) => setText(e.target.value)}
         className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-500"
@@ -30,7 +30,7 @@ export default function ChatInput({
         type="submit"
         className="bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition"
       >
-        Kirim
+        Send
       </button>
     </form>
   );

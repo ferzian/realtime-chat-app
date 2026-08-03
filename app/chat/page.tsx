@@ -51,7 +51,7 @@ export default function ChatPage() {
         setRooms(res.data.data || []);
       })
       .catch((err) => {
-        console.error("Gagal mengambil daftar room:", err);
+        console.error("Failed to fetch room list:", err);
         setRooms([]);
       })
       .finally(() => setLoading(false));
@@ -60,7 +60,7 @@ export default function ChatPage() {
       socketRef.current.emit("joinRoom", { roomId: activeRoomId });
       socketRef.current.emit("markAsRead", { roomId: activeRoomId });
     }
-  }, [router]);
+  }, [router, activeRoomId]);
 
   const handleSendMessage = (text: string) => {
     if (!activeRoomId || !socketRef.current) return;
@@ -79,7 +79,7 @@ export default function ChatPage() {
   if (loading)
     return (
       <div className="flex min-h-screen items-center justify-center text-slate-500">
-        Memuat...
+        Loading...
       </div>
     );
 
@@ -101,7 +101,7 @@ export default function ChatPage() {
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center text-slate-400 text-sm">
-            Pilih obrolan dari sidebar untuk memulai pesan
+            Select a conversation from the sidebar to start messaging
           </div>
         )}
       </div>

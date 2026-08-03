@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import api from "@/lib/axios";
+import { User, Mail, Lock, AlertCircle } from "lucide-react";
 
 export default function RegisterForm() {
   const [name, setName] = useState("");
@@ -24,7 +25,7 @@ export default function RegisterForm() {
     } catch (err: any) {
       const msg = err.response?.data?.message;
       setError(
-        Array.isArray(msg) ? msg.join(" | ") : msg || "Registrasi gagal.",
+        Array.isArray(msg) ? msg.join(" | ") : msg || "Registration failed."
       );
     } finally {
       setLoading(false);
@@ -34,74 +35,90 @@ export default function RegisterForm() {
   return (
     <>
       {error && (
-        <div className="mb-4 text-xs font-medium text-red-600 bg-red-50 p-3 rounded-lg border border-red-100">
-          {error}
+        <div className="mb-5 text-xs font-medium text-red-700 bg-red-50 p-3.5 rounded-xl border border-red-200/60 flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 
       <form onSubmit={handleRegister} className="space-y-4">
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1">
-            Nama
+          <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+            Full Name
           </label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            minLength={3}
-            maxLength={50}
-            placeholder="pengguna"
-            className="w-full rounded-lg border border-slate-200 p-2.5 text-sm outline-none focus:border-blue-500 text-gray-500"
-            required
-          />
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <User className="w-4 h-4" />
+            </div>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              minLength={3}
+              maxLength={50}
+              placeholder="John Doe"
+              className="w-full rounded-xl border border-slate-200 pl-10 pr-3.5 py-2.5 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-800 placeholder:text-slate-400 transition-all bg-slate-50/30 focus:bg-white"
+              required
+            />
+          </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1">
-            Email
+          <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+            Email Address
           </label>
-          <input
-            type="email"
-            value={email}
-            placeholder="contoh@gmail.com"
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-lg border border-slate-200 p-2.5 text-sm outline-none focus:border-blue-500 text-gray-500"
-            required
-          />
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <Mail className="w-4 h-4" />
+            </div>
+            <input
+              type="email"
+              value={email}
+              placeholder="user@example.com"
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-xl border border-slate-200 pl-10 pr-3.5 py-2.5 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-800 placeholder:text-slate-400 transition-all bg-slate-50/30 focus:bg-white"
+              required
+            />
+          </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1">
+          <label className="block text-xs font-semibold text-slate-700 mb-1.5">
             Password
           </label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            minLength={8}
-            maxLength={32}
-            placeholder="********"
-            className="w-full rounded-lg border border-slate-200 p-2.5 text-sm outline-none focus:border-blue-500 text-gray-500"
-            required
-          />
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <Lock className="w-4 h-4" />
+            </div>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              minLength={8}
+              maxLength={32}
+              placeholder="••••••••"
+              className="w-full rounded-xl border border-slate-200 pl-10 pr-3.5 py-2.5 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-800 placeholder:text-slate-400 transition-all bg-slate-50/30 focus:bg-white"
+              required
+            />
+          </div>
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 mt-2"
+          className="w-full rounded-xl bg-zinc-900 py-3 text-sm font-semibold text-white hover:bg-black disabled:opacity-50 transition-all duration-200 shadow-md shadow-zinc-900/10 active:scale-[0.98] mt-2 cursor-pointer"
         >
-          {loading ? "Memproses..." : "Daftar Sekarang"}
+          {loading ? "Processing..." : "Create Account"}
         </button>
       </form>
 
       <p className="mt-6 text-center text-xs text-slate-500">
-        Sudah punya akun?{" "}
+        Already have an account?{" "}
         <Link
           href="/auth/login"
-          className="font-semibold text-blue-600 hover:underline"
+          className="font-semibold text-amber-600 hover:text-amber-700 transition-colors"
         >
-          Masuk di sini
+          Sign in here
         </Link>
       </p>
     </>
