@@ -1,10 +1,13 @@
-import { useState } from "react";
+"use client";
 
-export default function ChatInput({
-  onSendMessage,
-}: {
+import { useState } from "react";
+import { Send, Smile, Paperclip } from "lucide-react";
+
+interface ChatInputProps {
   onSendMessage: (text: string) => void;
-}) {
+}
+
+export default function ChatInput({ onSendMessage }: ChatInputProps) {
   const [text, setText] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -17,20 +20,40 @@ export default function ChatInput({
   return (
     <form
       onSubmit={handleSubmit}
-      className="p-3 bg-white border-t border-slate-200 flex gap-2"
+      className="p-3 sm:p-4 bg-white/90 backdrop-blur-md border-t border-slate-100 flex items-center gap-2 sm:gap-3"
     >
-      <input
-        type="text"
-        placeholder="Type a message..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-500"
-      />
+      <button
+        type="button"
+        className="p-2.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition shrink-0 cursor-pointer"
+        title="Attach file"
+      >
+        <Paperclip className="w-5 h-5" />
+      </button>
+
+      <div className="flex-1 relative flex items-center">
+        <input
+          type="text"
+          placeholder="Type a message..."
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          className="w-full rounded-xl border border-slate-200/80 pl-4 pr-10 py-2.5 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-800 placeholder:text-slate-400 bg-slate-50/40 focus:bg-white transition-all"
+        />
+        <button
+          type="button"
+          className="absolute right-3 text-slate-400 hover:text-slate-600 transition cursor-pointer"
+          title="Add emoji"
+        >
+          <Smile className="w-5 h-5" />
+        </button>
+      </div>
+
       <button
         type="submit"
-        className="bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        disabled={!text.trim()}
+        className="bg-zinc-900 hover:bg-black text-white p-2.5 sm:px-4 sm:py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 shadow-md shadow-zinc-900/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer shrink-0"
       >
-        Send
+        <span className="hidden sm:inline">Send</span>
+        <Send className="w-4 h-4" />
       </button>
     </form>
   );

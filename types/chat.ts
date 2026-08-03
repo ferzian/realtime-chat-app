@@ -20,5 +20,10 @@ export interface Message {
   id: number;
   content: string;
   senderId?: number;
+  createdAt?: string;
   isDeleted?: boolean;
+  sender?: {
+    id: number;
+    username: string;
+  };
 }
