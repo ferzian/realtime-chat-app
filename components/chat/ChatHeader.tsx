@@ -40,7 +40,6 @@ export default function ChatHeader({
           >
             {room?.isGroup ? <Users className="w-4 h-4" /> : initials}
           </div>
-          <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" />
         </div>
 
         <div>
@@ -54,19 +53,19 @@ export default function ChatHeader({
               </span>
             ) : (
               <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
-                • Active Now
+                
               </span>
             )}
           </div>
-          <p className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1 mt-0.5">
+          {/* <p className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1 mt-0.5">
             <ShieldCheck className="w-3.5 h-3.5 text-amber-600 dark:text-amber-500" />
             <span>End-to-end Encrypted</span>
-          </p>
+          </p> */}
         </div>
       </div>
 
       <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500">
-        <button
+        {/* <button
           className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition cursor-pointer"
           title="Voice Call"
         >
@@ -77,7 +76,7 @@ export default function ChatHeader({
           title="Video Call"
         >
           <Video className="w-4 h-4" />
-        </button>
+        </button> */}
         <button
           className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition cursor-pointer"
           title="More Options"

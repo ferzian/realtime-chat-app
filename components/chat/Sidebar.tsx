@@ -134,13 +134,8 @@ export default function Sidebar({
                           : "bg-linear-to-tr from-amber-600 to-amber-400"
                       }`}
                     >
-                      {room.isGroup ? (
-                        <Users className="w-4 h-4" />
-                      ) : (
-                        initials
-                      )}
+                      {room.isGroup ? <Users className="w-4 h-4" /> : initials}
                     </div>
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" />
                   </div>
 
                   {/* Room Info */}

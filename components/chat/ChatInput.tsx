@@ -38,13 +38,13 @@ export default function ChatInput({ onSendMessage }: ChatInputProps) {
           onChange={(e) => setText(e.target.value)}
           className="w-full rounded-xl border border-slate-200/80 dark:border-slate-700/80 pl-4 pr-10 py-2.5 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 bg-slate-50/40 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all"
         />
-        <button
+        {/* <button
           type="button"
           className="absolute right-3 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer"
           title="Add emoji"
         >
           <Smile className="w-5 h-5" />
-        </button>
+        </button> */}
       </div>
 
       <button

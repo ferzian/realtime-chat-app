@@ -1,5 +1,5 @@
 import { Message } from "@/types/chat";
-import { Sparkles, AlertCircle } from "lucide-react";
+import { AlertCircle, MessageSquare } from "lucide-react";
 
 interface MessageListProps {
   messages: Message[];
@@ -14,7 +14,7 @@ export default function MessageList({
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
         <div className="w-14 h-14 rounded-2xl bg-amber-100/80 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-3 shadow-md shadow-amber-500/10 border border-amber-200/60 dark:border-amber-900/60">
-          <Sparkles className="w-7 h-7" />
+          <MessageSquare className="w-7 h-7" />
         </div>
         <h3 className="font-bold text-slate-800 dark:text-slate-200 text-base">No messages yet</h3>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xs leading-relaxed">

@@ -7,8 +7,8 @@ import {
   Smartphone,
   CheckCircle2,
   ArrowRight,
-  Sparkles,
   MoreVertical,
+  MessageSquare,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -24,7 +24,7 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             <div className="lg:col-span-7 flex flex-col items-start text-left">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider text-amber-900 dark:text-amber-300 bg-amber-100/80 dark:bg-amber-900/40 border border-amber-200/70 dark:border-amber-700/60 uppercase shadow-xs mb-6">
-                <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                <MessageSquare className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                 <span>Redefining Presence</span>
               </div>
 
