@@ -112,7 +112,13 @@ export default function Sidebar({
           ) : (
             filteredRooms.map((room) => {
               const roomName = getRoomName(room);
-              const initials = roomName.substring(0, 2).toUpperCase();
+              const initials = roomName
+                .trim()
+                .split(/\s+/)
+                .slice(0, 2)
+                .map((word: string) => word[0])
+                .join("")
+                .toUpperCase();
               const isActive = activeRoomId === room.id;
 
               return (

@@ -25,7 +25,13 @@ export default function ChatHeader({
   };
 
   const title = getRoomTitle();
-  const initials = title.substring(0, 2).toUpperCase();
+  const initials = title
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase();
 
   return (
     <div className="p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shadow-xs transition-colors duration-200">
@@ -52,9 +58,7 @@ export default function ChatHeader({
                 Group
               </span>
             ) : (
-              <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
-                
-              </span>
+              <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500"></span>
             )}
           </div>
           {/* <p className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1 mt-0.5">
