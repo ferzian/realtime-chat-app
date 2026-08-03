@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import api from "@/lib/axios";
@@ -21,49 +21,51 @@ export default function ChatPage() {
   const socketRef = useRef<any>(null);
   const router = useRouter();
 
+  const fetchRooms = useCallback(() => {
+    api
+      .get("/rooms")
+      .then((res) => setRooms(res.data.data || []))
+      .catch((err) => console.error("Gagal mengambil daftar room:", err))
+      .finally(() => setLoading(false));
+  }, []);
+
   useEffect(() => {
     const token = Cookies.get("token");
     if (!token) return router.push("/auth/login");
 
-    api
-      .get("/rooms")
-      .then((res) => setRooms(res.data))
-      .finally(() => setLoading(false));
+    fetchRooms();
 
     const socket = getSocket();
     socket.connect();
     socketRef.current = socket;
 
-    socket.on("newMessage", (newMsg) => {
+    socket.on("newMessage", (newMsg: Message) => {
       setMessages((prev) => [...prev, newMsg]);
     });
 
-    return () => disconnectSocket();
-  }, [router]);
+    return () => {
+      socket.off("newMessage");
+      disconnectSocket();
+    };
+  }, [router, fetchRooms]);
 
   useEffect(() => {
-    const token = Cookies.get("token");
-    if (!token) return router.push("/auth/login");
+    if (!activeRoomId) return;
 
     api
-      .get("/rooms")
-      .then((res) => {
-        setRooms(res.data.data || []);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch room list:", err);
-        setRooms([]);
-      })
-      .finally(() => setLoading(false));
+      .get(`/messages/${activeRoomId}`)
+      .then((res) => setMessages(res.data.data || res.data || []))
+      .catch((err) => console.error("Gagal mengambil pesan:", err));
 
     if (socketRef.current) {
       socketRef.current.emit("joinRoom", { roomId: activeRoomId });
       socketRef.current.emit("markAsRead", { roomId: activeRoomId });
     }
-  }, [router, activeRoomId]);
+  }, [activeRoomId]);
 
   const handleSendMessage = (text: string) => {
     if (!activeRoomId || !socketRef.current) return;
+
     socketRef.current.emit("sendMessage", {
       roomId: activeRoomId,
       content: text,
@@ -76,12 +78,13 @@ export default function ChatPage() {
     router.push("/auth/login");
   };
 
-  if (loading)
+  if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-slate-500">
+      <div className="flex min-h-screen items-center justify-center text-slate-500 font-medium">
         Loading...
       </div>
     );
+  }
 
   return (
     <div className="flex h-screen bg-slate-100 overflow-hidden">
@@ -90,6 +93,7 @@ export default function ChatPage() {
         activeRoomId={activeRoomId}
         onSelectRoom={setActiveRoomId}
         onLogout={handleLogout}
+        onRefreshRooms={fetchRooms}
       />
 
       <div className="flex-1 flex flex-col bg-slate-50">
@@ -101,7 +105,7 @@ export default function ChatPage() {
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center text-slate-400 text-sm">
-            Select a conversation from the sidebar to start messaging
+            Select a chat from the sidebar to start a message
           </div>
         )}
       </div>
