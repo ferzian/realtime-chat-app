@@ -175,7 +175,7 @@ export default function ChatPage() {
           {activeRoomId ? (
             <>
               <ChatHeader roomId={activeRoomId} />
-              <MessageList messages={messages} />
+              <MessageList messages={messages} currentUserId={currentUserId} />
               <ChatInput onSendMessage={handleSendMessage} />
             </>
           ) : (
