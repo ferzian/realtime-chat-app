@@ -47,15 +47,15 @@ export default function Sidebar({
 
   return (
     <>
-      <div className="w-80 md:w-84 bg-white border-r border-slate-200/80 flex flex-col h-full shadow-xs shrink-0">
+      <div className="w-80 md:w-84 bg-white dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 flex flex-col h-full shadow-xs shrink-0 transition-colors duration-200">
         {/* Sidebar Header */}
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between gap-2">
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <h2 className="font-extrabold text-slate-900 text-lg tracking-tight">
+            <h2 className="font-extrabold text-slate-900 dark:text-white text-lg tracking-tight">
               Messages
             </h2>
             {safeRooms.length > 0 && (
-              <span className="bg-amber-100/80 text-amber-900 border border-amber-200/60 text-[11px] font-bold px-2 py-0.5 rounded-full">
+              <span className="bg-amber-100/80 dark:bg-amber-900/50 text-amber-900 dark:text-amber-300 border border-amber-200/60 dark:border-amber-700/60 text-[11px] font-bold px-2 py-0.5 rounded-full">
                 {safeRooms.length}
               </span>
             )}
@@ -63,7 +63,7 @@ export default function Sidebar({
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="inline-flex items-center gap-1.5 bg-zinc-900 hover:bg-black text-white text-xs font-semibold px-3 py-2 rounded-xl transition-all shadow-sm active:scale-95 cursor-pointer"
+            className="inline-flex items-center gap-1.5 bg-zinc-900 dark:bg-amber-600 hover:bg-black dark:hover:bg-amber-700 text-white text-xs font-semibold px-3 py-2 rounded-xl transition-all shadow-sm active:scale-95 cursor-pointer"
             title="Start New Chat"
           >
             <Plus className="w-3.5 h-3.5" />
@@ -72,30 +72,30 @@ export default function Sidebar({
         </div>
 
         {/* Search Input */}
-        <div className="p-3 border-b border-slate-100 bg-slate-50/40">
+        <div className="p-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-950/40">
           <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search conversations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-3.5 py-2 text-xs outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-800 placeholder:text-slate-400 transition-all"
+              className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-3.5 py-2 text-xs outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all"
             />
           </div>
         </div>
 
         {/* Room List */}
-        <div className="flex-1 overflow-y-auto divide-y divide-slate-100/60">
+        <div className="flex-1 overflow-y-auto divide-y divide-slate-100/60 dark:divide-slate-800/60">
           {filteredRooms.length === 0 ? (
             <div className="p-8 text-center flex flex-col items-center justify-center">
-              <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-3 border border-amber-100">
+              <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-3 border border-amber-100 dark:border-amber-900/60">
                 <MessageSquare className="w-6 h-6" />
               </div>
-              <p className="text-sm font-semibold text-slate-700">
+              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                 {searchQuery ? "No matches found" : "No conversation yet"}
               </p>
-              <p className="text-xs text-slate-400 mt-1 max-w-xs leading-relaxed">
+              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 max-w-xs leading-relaxed">
                 {searchQuery
                   ? "Try searching for another user or group name."
                   : "Start a new conversation to begin messaging."}
@@ -103,7 +103,7 @@ export default function Sidebar({
               {!searchQuery && (
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-amber-700 bg-amber-100/80 hover:bg-amber-100 px-3.5 py-2 rounded-xl transition border border-amber-200/70 cursor-pointer"
+                  className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-amber-700 dark:text-amber-300 bg-amber-100/80 dark:bg-amber-900/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 px-3.5 py-2 rounded-xl transition border border-amber-200/70 dark:border-amber-700/60 cursor-pointer"
                 >
                   <span>Start Chat</span>
                 </button>
@@ -112,9 +112,7 @@ export default function Sidebar({
           ) : (
             filteredRooms.map((room) => {
               const roomName = getRoomName(room);
-              const initials = roomName
-                .substring(0, 2)
-                .toUpperCase();
+              const initials = roomName.substring(0, 2).toUpperCase();
               const isActive = activeRoomId === room.id;
 
               return (
@@ -123,8 +121,8 @@ export default function Sidebar({
                   onClick={() => onSelectRoom(room.id)}
                   className={`p-3.5 cursor-pointer transition-all duration-150 flex items-center gap-3.5 ${
                     isActive
-                      ? "bg-amber-50/80 border-l-4 border-l-amber-500 text-slate-900"
-                      : "hover:bg-slate-50/80 text-slate-700"
+                      ? "bg-amber-50/80 dark:bg-amber-500/10 border-l-4 border-l-amber-500 text-slate-900 dark:text-white"
+                      : "hover:bg-slate-50/80 dark:hover:bg-slate-800/60 text-slate-700 dark:text-slate-300"
                   }`}
                 >
                   {/* Avatar */}
@@ -132,7 +130,7 @@ export default function Sidebar({
                     <div
                       className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-xs text-white shadow-xs ${
                         room.isGroup
-                          ? "bg-linear-to-tr from-zinc-800 to-zinc-600"
+                          ? "bg-linear-to-tr from-zinc-800 to-zinc-600 dark:from-zinc-700 dark:to-zinc-500"
                           : "bg-linear-to-tr from-amber-600 to-amber-400"
                       }`}
                     >
@@ -142,7 +140,7 @@ export default function Sidebar({
                         initials
                       )}
                     </div>
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full" />
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" />
                   </div>
 
                   {/* Room Info */}
@@ -151,20 +149,20 @@ export default function Sidebar({
                       <h3
                         className={`text-sm truncate leading-tight ${
                           isActive
-                            ? "font-bold text-amber-950"
-                            : "font-semibold text-slate-800"
+                            ? "font-bold text-amber-950 dark:text-amber-400"
+                            : "font-semibold text-slate-800 dark:text-slate-200"
                         }`}
                       >
                         {roomName}
                       </h3>
                       {room.isGroup && (
-                        <span className="text-[10px] uppercase font-bold text-amber-700 bg-amber-100/80 px-1.5 py-0.2 rounded-md">
+                        <span className="text-[10px] uppercase font-bold text-amber-700 dark:text-amber-300 bg-amber-100/80 dark:bg-amber-900/60 px-1.5 py-0.2 rounded-md">
                           Group
                         </span>
                       )}
                     </div>
 
-                    <p className="text-xs text-slate-400 truncate mt-1">
+                    <p className="text-xs text-slate-400 dark:text-slate-500 truncate mt-1">
                       {room.messages && room.messages.length > 0
                         ? room.messages[0].content
                         : "No messages yet"}

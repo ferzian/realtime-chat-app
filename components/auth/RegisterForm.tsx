@@ -35,19 +35,19 @@ export default function RegisterForm() {
   return (
     <>
       {error && (
-        <div className="mb-5 text-xs font-medium text-red-700 bg-red-50 p-3.5 rounded-xl border border-red-200/60 flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+        <div className="mb-5 text-xs font-medium text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-950/50 p-3.5 rounded-xl border border-red-200/60 dark:border-red-800/60 flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       <form onSubmit={handleRegister} className="space-y-4">
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
             Full Name
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
               <User className="w-4 h-4" />
             </div>
             <input
@@ -57,18 +57,18 @@ export default function RegisterForm() {
               minLength={3}
               maxLength={50}
               placeholder="John Doe"
-              className="w-full rounded-xl border border-slate-200 pl-10 pr-3.5 py-2.5 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-800 placeholder:text-slate-400 transition-all bg-slate-50/30 focus:bg-white"
+              className="w-full rounded-xl border border-slate-200 dark:border-slate-700 pl-10 pr-3.5 py-2.5 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all bg-slate-50/30 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800"
               required
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
             Email Address
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
               <Mail className="w-4 h-4" />
             </div>
             <input
@@ -76,18 +76,18 @@ export default function RegisterForm() {
               value={email}
               placeholder="user@example.com"
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 pl-10 pr-3.5 py-2.5 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-800 placeholder:text-slate-400 transition-all bg-slate-50/30 focus:bg-white"
+              className="w-full rounded-xl border border-slate-200 dark:border-slate-700 pl-10 pr-3.5 py-2.5 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all bg-slate-50/30 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800"
               required
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
             Password
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
               <Lock className="w-4 h-4" />
             </div>
             <input
@@ -97,7 +97,7 @@ export default function RegisterForm() {
               minLength={8}
               maxLength={32}
               placeholder="••••••••"
-              className="w-full rounded-xl border border-slate-200 pl-10 pr-3.5 py-2.5 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-800 placeholder:text-slate-400 transition-all bg-slate-50/30 focus:bg-white"
+              className="w-full rounded-xl border border-slate-200 dark:border-slate-700 pl-10 pr-3.5 py-2.5 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all bg-slate-50/30 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800"
               required
             />
           </div>
@@ -106,17 +106,17 @@ export default function RegisterForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-xl bg-zinc-900 py-3 text-sm font-semibold text-white hover:bg-black disabled:opacity-50 transition-all duration-200 shadow-md shadow-zinc-900/10 active:scale-[0.98] mt-2 cursor-pointer"
+          className="w-full rounded-xl bg-zinc-900 dark:bg-amber-600 py-3 text-sm font-semibold text-white hover:bg-black dark:hover:bg-amber-700 disabled:opacity-50 transition-all duration-200 shadow-md shadow-zinc-900/10 dark:shadow-amber-600/10 active:scale-[0.98] mt-2 cursor-pointer"
         >
           {loading ? "Processing..." : "Create Account"}
         </button>
       </form>
 
-      <p className="mt-6 text-center text-xs text-slate-500">
+      <p className="mt-6 text-center text-xs text-slate-500 dark:text-slate-400">
         Already have an account?{" "}
         <Link
           href="/auth/login"
-          className="font-semibold text-amber-600 hover:text-amber-700 transition-colors"
+          className="font-semibold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors"
         >
           Sign in here
         </Link>
