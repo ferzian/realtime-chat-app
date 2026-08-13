@@ -72,10 +72,15 @@ export default function ChatPage() {
 
     socket.on("newMessage", (newMsg: Message) => {
       setMessages((prev) => {
-        // Jika pesan baru ini untuk room yang sedang terbuka, beritahu server kita sudah membacanya!
-        if (activeRoomIdRef.current === newMsg.roomId) {
-          socket.emit("markAsRead", { roomId: newMsg.roomId });
+        // Jika pesan baru bukan untuk room yang sedang kita buka, abaikan
+        // (Sidebar akan tetap update karena ada event roomsUpdated)
+        if (activeRoomIdRef.current !== newMsg.roomId) {
+          return prev;
         }
+        
+        // Jika pesan baru ini untuk room yang sedang terbuka, beritahu server kita sudah membacanya!
+        socket.emit("markAsRead", { roomId: newMsg.roomId });
+        
         return [...prev, newMsg];
       });
     });
