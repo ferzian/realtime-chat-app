@@ -10,7 +10,11 @@ interface ChatInputProps {
   onCancelReply?: () => void;
 }
 
-export default function ChatInput({ onSendMessage, replyingTo, onCancelReply }: ChatInputProps) {
+export default function ChatInput({
+  onSendMessage,
+  replyingTo,
+  onCancelReply,
+}: ChatInputProps) {
   const [text, setText] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -30,10 +34,12 @@ export default function ChatInput({ onSendMessage, replyingTo, onCancelReply }: 
             </div>
             <div className="flex flex-col overflow-hidden">
               <span className="text-xs font-semibold text-amber-600 dark:text-amber-400">
-                Replying to {replyingTo.sender?.username || 'someone'}
+                Replying to {replyingTo.sender?.username || "someone"}
               </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[200px] sm:max-w-[400px]">
-                {replyingTo.isDeleted ? "This message was deleted" : replyingTo.content}
+              <span className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-50 sm:max-w-100">
+                {replyingTo.isDeleted
+                  ? "This message was deleted"
+                  : replyingTo.content}
               </span>
             </div>
           </div>
