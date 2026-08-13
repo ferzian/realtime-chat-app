@@ -156,11 +156,6 @@ export default function Sidebar({
                       >
                         {roomName}
                       </h3>
-                      {room.isGroup && (
-                        <span className="text-[10px] uppercase font-bold text-amber-700 dark:text-amber-300 bg-amber-100/80 dark:bg-amber-900/60 px-1.5 py-0.2 rounded-md">
-                          Group
-                        </span>
-                      )}
                     </div>
 
                     <p className="text-xs text-slate-400 dark:text-slate-500 truncate mt-1">
@@ -168,6 +163,20 @@ export default function Sidebar({
                         ? room.messages[0].content
                         : "No messages yet"}
                     </p>
+                  </div>
+
+                  {/* Badges (Group / Unread) */}
+                  <div className="flex flex-col items-end gap-1 shrink-0 ml-2">
+                    {room.isGroup && (
+                      <span className="text-[9px] uppercase font-bold text-amber-700 dark:text-amber-300 bg-amber-100/80 dark:bg-amber-900/60 px-1.5 py-0.5 rounded-md">
+                        Group
+                      </span>
+                    )}
+                    {room._count?.messages && room._count.messages > 0 ? (
+                      <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] text-center shadow-xs">
+                        {room._count.messages > 99 ? "99+" : room._count.messages}
+                      </span>
+                    ) : null}
                   </div>
                 </div>
               );

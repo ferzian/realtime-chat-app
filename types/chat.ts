@@ -14,6 +14,9 @@ export interface Room {
   name?: string;
   participants: Participant[];
   messages?: Array<{ content: string; createdAt: string }>;
+  _count?: {
+    messages: number;
+  };
 }
 
 export interface Message {

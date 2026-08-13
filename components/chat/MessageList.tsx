@@ -1,4 +1,5 @@
 import { Message } from "@/types/chat";
+import { useEffect, useRef } from "react";
 import {
   AlertCircle,
   MessageSquare,
@@ -23,6 +24,16 @@ export default function MessageList({
   onReply,
   onDelete,
 }: MessageListProps) {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   if (!messages || messages.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
@@ -167,6 +178,7 @@ export default function MessageList({
           </div>
         );
       })}
+      <div ref={messagesEndRef} />
     </div>
   );
 }

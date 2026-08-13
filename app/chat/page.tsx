@@ -96,6 +96,9 @@ export default function ChatPage() {
           return msg;
         })
       );
+      
+      // Refresh sidebar agar badge notifikasi merah (unread count) hilang secara real-time
+      fetchRooms();
     });
 
     socket.on("messageDeleted", (data: { messageId: number; roomId: number; content: string; isDeleted: boolean }) => {
@@ -124,8 +127,8 @@ export default function ChatPage() {
   }, [router, fetchRooms]);
 
   useEffect(() => {
-    if (!activeRoomId) return;
     activeRoomIdRef.current = activeRoomId;
+    if (!activeRoomId) return;
 
     api
       .get(`/messages/${activeRoomId}`)
