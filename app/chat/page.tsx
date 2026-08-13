@@ -93,8 +93,19 @@ export default function ChatPage() {
       );
     });
 
+    socket.on("messageDeleted", (data: { messageId: number; roomId: number; content: string; isDeleted: boolean }) => {
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === data.messageId
+            ? { ...msg, isDeleted: data.isDeleted, content: data.content, imageUrl: undefined }
+            : msg
+        )
+      );
+    });
+
     socket.on("exception", (err: any) => {
       console.error("🚨 WsJwtGuard Error:", err);
+      if (err?.message) alert(`Error: ${err.message}`);
     });
 
     return () => {
@@ -102,6 +113,7 @@ export default function ChatPage() {
       socket.off("roomsUpdated");
       socket.off("newMessage");
       socket.off("messagesRead");
+      socket.off("messageDeleted");
       socket.off("exception");
     };
   }, [router, fetchRooms]);
@@ -133,6 +145,16 @@ export default function ChatPage() {
     });
 
     setReplyingTo(null);
+  };
+
+  const handleDeleteMessage = (msg: Message) => {
+    if (!activeRoomId || !socketRef.current) return;
+    if (confirm("Apakah Anda yakin ingin menghapus pesan ini?")) {
+      socketRef.current.emit("deleteMessage", {
+        messageId: msg.id,
+        roomId: Number(activeRoomId),
+      });
+    }
   };
 
   const handleLogout = () => {
@@ -211,11 +233,13 @@ export default function ChatPage() {
                 roomId={activeRoomId}
                 room={rooms.find((r) => r.id === activeRoomId)}
                 currentUserId={currentUserId}
+                onClose={() => setActiveRoomId(null)}
               />
               <MessageList
                 messages={messages}
                 currentUserId={currentUserId}
                 onReply={setReplyingTo}
+                onDelete={handleDeleteMessage}
               />
               <ChatInput
                 onSendMessage={handleSendMessage}

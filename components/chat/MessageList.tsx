@@ -5,6 +5,7 @@ import {
   Check,
   CheckCheck,
   Reply,
+  Trash2,
 } from "lucide-react";
 
 interface MessageListProps {
@@ -12,6 +13,7 @@ interface MessageListProps {
   currentUserId?: number;
   isGroup?: boolean;
   onReply?: (msg: Message) => void;
+  onDelete?: (msg: Message) => void;
 }
 
 export default function MessageList({
@@ -19,6 +21,7 @@ export default function MessageList({
   currentUserId,
   isGroup = true,
   onReply,
+  onDelete,
 }: MessageListProps) {
   if (!messages || messages.length === 0) {
     return (
@@ -142,14 +145,23 @@ export default function MessageList({
                 )}
               </div>
 
-              {isMine && (
-                <button
-                  onClick={() => onReply && onReply(msg)}
-                  className="opacity-0 group-hover:opacity-100 p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 bg-white dark:bg-slate-800 rounded-full shadow-sm transition-all absolute -left-10 cursor-pointer"
-                  title="Reply"
-                >
-                  <Reply className="w-4 h-4" />
-                </button>
+              {isMine && !msg.isDeleted && (
+                <div className="opacity-0 group-hover:opacity-100 absolute -left-20 flex items-center gap-1.5 transition-all">
+                  <button
+                    onClick={() => onDelete && onDelete(msg)}
+                    className="p-1.5 text-slate-400 hover:text-red-500 bg-white dark:bg-slate-800 rounded-full shadow-sm cursor-pointer transition-colors"
+                    title="Delete"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => onReply && onReply(msg)}
+                    className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 bg-white dark:bg-slate-800 rounded-full shadow-sm cursor-pointer transition-colors"
+                    title="Reply"
+                  >
+                    <Reply className="w-4 h-4" />
+                  </button>
+                </div>
               )}
             </div>
           </div>

@@ -1,16 +1,18 @@
 import { Room } from "@/types/chat";
-import { Users, MoreVertical, Phone, Video, ShieldCheck } from "lucide-react";
+import { Users, MoreVertical, X } from "lucide-react";
 
 interface ChatHeaderProps {
   roomId: number;
   room?: Room;
   currentUserId?: number;
+  onClose?: () => void;
 }
 
 export default function ChatHeader({
   roomId,
   room,
   currentUserId,
+  onClose,
 }: ChatHeaderProps) {
   const getRoomTitle = () => {
     if (!room) return `Room #${roomId}`;
@@ -82,10 +84,11 @@ export default function ChatHeader({
           <Video className="w-4 h-4" />
         </button> */}
         <button
-          className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition cursor-pointer"
-          title="More Options"
+          onClick={onClose}
+          className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-red-500 dark:hover:text-red-400 transition cursor-pointer"
+          title="Close Chat"
         >
-          <MoreVertical className="w-4 h-4" />
+          <X className="w-5 h-5" />
         </button>
       </div>
     </div>
