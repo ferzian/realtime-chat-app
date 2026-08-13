@@ -1,16 +1,18 @@
 import { Message } from "@/types/chat";
-import { AlertCircle, MessageSquare } from "lucide-react";
+import { AlertCircle, MessageSquare, Check, CheckCheck, Reply } from "lucide-react";
 
 interface MessageListProps {
   messages: Message[];
   currentUserId?: number;
   isGroup?: boolean;
+  onReply?: (msg: Message) => void;
 }
 
 export default function MessageList({
   messages,
   currentUserId,
   isGroup = true,
+  onReply,
 }: MessageListProps) {
   if (!messages || messages.length === 0) {
     return (
@@ -46,14 +48,35 @@ export default function MessageList({
               </span>
             )}
 
-            <div
-              className={`p-3.5 max-w-xs sm:max-w-md transition-all ${
-                isMine
-                  ? "bg-zinc-900 dark:bg-amber-600 text-white rounded-2xl rounded-tr-xs shadow-md shadow-zinc-900/10 dark:shadow-amber-600/10"
-                  : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-2xl rounded-tl-xs shadow-xs border border-slate-100 dark:border-slate-700/60"
-              }`}
-            >
-              <p className="text-sm leading-relaxed font-normal">
+            <div className="flex items-center gap-2 group relative">
+              {!isMine && (
+                <button
+                  onClick={() => onReply && onReply(msg)}
+                  className="opacity-0 group-hover:opacity-100 p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 bg-white dark:bg-slate-800 rounded-full shadow-sm transition-all absolute -right-10 cursor-pointer"
+                  title="Reply"
+                >
+                  <Reply className="w-4 h-4" />
+                </button>
+              )}
+
+              <div
+                className={`p-3.5 max-w-xs sm:max-w-md transition-all ${
+                  isMine
+                    ? "bg-zinc-900 dark:bg-amber-600 text-white rounded-2xl rounded-tr-xs shadow-md shadow-zinc-900/10 dark:shadow-amber-600/10"
+                    : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-2xl rounded-tl-xs shadow-xs border border-slate-100 dark:border-slate-700/60"
+                }`}
+              >
+                {msg.replyTo && (
+                  <div className={`mb-2 p-2 rounded-xl text-xs border-l-2 ${
+                    isMine 
+                      ? "bg-black/20 border-white/40 text-white/90" 
+                      : "bg-slate-100 dark:bg-slate-700/50 border-amber-500 text-slate-600 dark:text-slate-300"
+                  }`}>
+                    <div className="font-semibold mb-0.5">{msg.replyTo.sender?.username || 'someone'}</div>
+                    <div className="truncate opacity-90">{msg.replyTo.isDeleted ? "This message was deleted" : msg.replyTo.content}</div>
+                  </div>
+                )}
+                <p className="text-sm leading-relaxed font-normal">
                 {msg.isDeleted ? (
                   <span className="italic text-slate-400 dark:text-slate-400 flex items-center gap-1.5">
                     <AlertCircle className="w-4 h-4 shrink-0" />
@@ -66,20 +89,44 @@ export default function MessageList({
 
               {msg.createdAt && (
                 <div
-                  className={`text-[10px] mt-1.5 text-right font-medium ${
+                  className={`flex items-center justify-end gap-1 text-[10px] mt-1.5 font-medium ${
                     isMine
                       ? "text-slate-400 dark:text-amber-200/80"
                       : "text-slate-400 dark:text-slate-400"
                   }`}
                 >
-                  {new Date(msg.createdAt).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  <span>
+                    {new Date(msg.createdAt).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                  {isMine && !msg.isDeleted && (
+                    <span className="ml-1">
+                      {msg.status === "READ" ? (
+                        <CheckCheck className="w-3.5 h-3.5 text-blue-400" />
+                      ) : msg.status === "DELIVERED" ? (
+                        <CheckCheck className="w-3.5 h-3.5 opacity-70" />
+                      ) : (
+                        <Check className="w-3.5 h-3.5 opacity-70" />
+                      )}
+                    </span>
+                  )}
                 </div>
               )}
             </div>
+
+            {isMine && (
+              <button
+                onClick={() => onReply && onReply(msg)}
+                className="opacity-0 group-hover:opacity-100 p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 bg-white dark:bg-slate-800 rounded-full shadow-sm transition-all absolute -left-10 cursor-pointer"
+                title="Reply"
+              >
+                <Reply className="w-4 h-4" />
+              </button>
+            )}
           </div>
+        </div>
         );
       })}
     </div>

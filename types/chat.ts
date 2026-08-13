@@ -22,6 +22,16 @@ export interface Message {
   senderId?: number;
   createdAt?: string;
   isDeleted?: boolean;
+  status?: "SENT" | "DELIVERED" | "READ";
+  replyToId?: number;
+  replyTo?: {
+    id: number;
+    content: string;
+    isDeleted?: boolean;
+    sender?: {
+      username: string;
+    };
+  };
   sender?: {
     id: number;
     username: string;
