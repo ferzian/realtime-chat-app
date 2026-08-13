@@ -1,11 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { Send, Smile, Paperclip, X, Reply } from "lucide-react";
+import { useState, useRef } from "react";
+import {
+  Send,
+  Smile,
+  Paperclip,
+  X,
+  Reply,
+  Image as ImageIcon,
+  Loader2,
+} from "lucide-react";
 import { Message } from "@/types/chat";
+import api from "@/lib/axios";
+import Cookies from "js-cookie";
 
 interface ChatInputProps {
-  onSendMessage: (text: string) => void;
+  onSendMessage: (text: string, imageUrl?: string) => void;
   replyingTo?: Message | null;
   onCancelReply?: () => void;
 }
@@ -16,12 +26,59 @@ export default function ChatInput({
   onCancelReply,
 }: ChatInputProps) {
   const [text, setText] = useState("");
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!text.trim()) return;
-    onSendMessage(text);
+    if (!text.trim() && !imageUrl) return;
+    onSendMessage(text, imageUrl || undefined);
     setText("");
+    setImageUrl(null);
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Reset input so the same file can be selected again
+    if (fileInputRef.current) fileInputRef.current.value = "";
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    setIsUploading(true);
+    try {
+      const token = Cookies.get("token");
+      const baseURL =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
+
+      const res = await fetch(`${baseURL}/messages/upload`, {
+        method: "POST",
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Upload failed (${res.status}): ${errText}`);
+      }
+
+      const data = await res.json();
+      if (data?.imageUrl) {
+        setImageUrl(data.imageUrl);
+      } else {
+        alert("Upload sukses tapi imageUrl tidak ada di response!");
+      }
+    } catch (error: any) {
+      console.error("Failed to upload image", error);
+      alert("Error: " + error.message);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -36,10 +93,11 @@ export default function ChatInput({
               <span className="text-xs font-semibold text-amber-600 dark:text-amber-400">
                 Replying to {replyingTo.sender?.username || "someone"}
               </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-50 sm:max-w-100">
+              <span className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-50 sm:max-w-400">
                 {replyingTo.isDeleted
                   ? "This message was deleted"
-                  : replyingTo.content}
+                  : replyingTo.content ||
+                    (replyingTo.imageUrl ? "📷 Photo" : "")}
               </span>
             </div>
           </div>
@@ -51,16 +109,49 @@ export default function ChatInput({
           </button>
         </div>
       )}
+
+      {imageUrl && (
+        <div className="px-4 pt-3 pb-1 flex">
+          <div className="relative group rounded-xl border border-slate-200 dark:border-slate-700 p-1 bg-slate-50 dark:bg-slate-800/50 inline-block">
+            <img
+              src={imageUrl}
+              alt="Upload preview"
+              className="h-20 w-auto rounded-lg object-cover"
+            />
+            <button
+              onClick={() => setImageUrl(null)}
+              className="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full shadow-md hover:bg-red-600 transition-colors cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
+
       <form
         onSubmit={handleSubmit}
         className="p-3 sm:p-4 flex items-center gap-2 sm:gap-3"
       >
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleFileSelect}
+          className="hidden"
+        />
+
         <button
           type="button"
-          className="p-2.5 rounded-xl text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0 cursor-pointer"
-          title="Attach file"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isUploading}
+          className="p-2.5 rounded-xl text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          title="Attach image"
         >
-          <Paperclip className="w-5 h-5" />
+          {isUploading ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            <ImageIcon className="w-5 h-5" />
+          )}
         </button>
 
         <div className="flex-1 relative flex items-center">
@@ -75,7 +166,7 @@ export default function ChatInput({
 
         <button
           type="submit"
-          disabled={!text.trim()}
+          disabled={(!text.trim() && !imageUrl) || isUploading}
           className="bg-zinc-900 dark:bg-amber-600 hover:bg-black dark:hover:bg-amber-700 text-white p-2.5 sm:px-4 sm:py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 shadow-md shadow-zinc-900/10 dark:shadow-amber-600/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer shrink-0"
         >
           <span className="hidden sm:inline">Send</span>

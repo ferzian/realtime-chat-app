@@ -19,6 +19,7 @@ export interface Room {
 export interface Message {
   id: number;
   content: string;
+  imageUrl?: string;
   senderId?: number;
   createdAt?: string;
   isDeleted?: boolean;
@@ -27,6 +28,7 @@ export interface Message {
   replyTo?: {
     id: number;
     content: string;
+    imageUrl?: string;
     isDeleted?: boolean;
     sender?: {
       username: string;

@@ -94,15 +94,16 @@ export default function ChatPage() {
     }
   }, [activeRoomId]);
 
-  const handleSendMessage = (text: string) => {
+  const handleSendMessage = (text: string, imageUrl?: string) => {
     if (!activeRoomId || !socketRef.current) return;
 
     socketRef.current.emit("sendMessage", {
       roomId: Number(activeRoomId),
       content: text,
+      imageUrl: imageUrl,
       replyToId: replyingTo?.id,
     });
-    
+
     setReplyingTo(null);
   };
 
@@ -178,13 +179,21 @@ export default function ChatPage() {
         <main className="flex-1 flex flex-col bg-slate-50/50 dark:bg-slate-950/50 relative min-w-0">
           {activeRoomId ? (
             <>
-              <ChatHeader 
-                roomId={activeRoomId} 
-                room={rooms.find(r => r.id === activeRoomId)} 
-                currentUserId={currentUserId} 
+              <ChatHeader
+                roomId={activeRoomId}
+                room={rooms.find((r) => r.id === activeRoomId)}
+                currentUserId={currentUserId}
               />
-              <MessageList messages={messages} currentUserId={currentUserId} onReply={setReplyingTo} />
-              <ChatInput onSendMessage={handleSendMessage} replyingTo={replyingTo} onCancelReply={() => setReplyingTo(null)} />
+              <MessageList
+                messages={messages}
+                currentUserId={currentUserId}
+                onReply={setReplyingTo}
+              />
+              <ChatInput
+                onSendMessage={handleSendMessage}
+                replyingTo={replyingTo}
+                onCancelReply={() => setReplyingTo(null)}
+              />
             </>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
