@@ -63,6 +63,11 @@ export default function ChatPage() {
 
     socket.on("connect", () => {
       console.log("🟢 Connected to Socket:", socket.id);
+      socket.emit("subscribeGlobal"); // Daftarkan user ke channel global untuk notifikasi sidebar
+    });
+
+    socket.on("roomsUpdated", () => {
+      fetchRooms(); // Refresh daftar obrolan di sidebar
     });
 
     socket.on("newMessage", (newMsg: Message) => {
@@ -94,6 +99,7 @@ export default function ChatPage() {
 
     return () => {
       socket.off("connect");
+      socket.off("roomsUpdated");
       socket.off("newMessage");
       socket.off("messagesRead");
       socket.off("exception");
