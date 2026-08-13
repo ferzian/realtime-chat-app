@@ -27,6 +27,7 @@ export default function ChatPage() {
   const [replyingTo, setReplyingTo] = useState<Message | null>(null);
 
   const socketRef = useRef<any>(null);
+  const activeRoomIdRef = useRef<number | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -65,7 +66,26 @@ export default function ChatPage() {
     });
 
     socket.on("newMessage", (newMsg: Message) => {
-      setMessages((prev) => [...prev, newMsg]);
+      setMessages((prev) => {
+        // Jika pesan baru ini untuk room yang sedang terbuka, beritahu server kita sudah membacanya!
+        if (activeRoomIdRef.current === newMsg.roomId) {
+          socket.emit("markAsRead", { roomId: newMsg.roomId });
+        }
+        return [...prev, newMsg];
+      });
+    });
+
+    socket.on("messagesRead", (data: { roomId: number; readBy: number }) => {
+      setMessages((prev) =>
+        prev.map((msg) => {
+          const senderId = msg.sender?.id || msg.senderId;
+          // Tandai pesan yang BUKAN dikirim oleh si pembaca (berarti pesan kita) menjadi READ
+          if (senderId !== data.readBy && msg.status !== "READ") {
+            return { ...msg, status: "READ" };
+          }
+          return msg;
+        })
+      );
     });
 
     socket.on("exception", (err: any) => {
@@ -75,12 +95,14 @@ export default function ChatPage() {
     return () => {
       socket.off("connect");
       socket.off("newMessage");
+      socket.off("messagesRead");
       socket.off("exception");
     };
   }, [router, fetchRooms]);
 
   useEffect(() => {
     if (!activeRoomId) return;
+    activeRoomIdRef.current = activeRoomId;
 
     api
       .get(`/messages/${activeRoomId}`)

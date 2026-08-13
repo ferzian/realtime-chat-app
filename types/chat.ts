@@ -18,6 +18,7 @@ export interface Room {
 
 export interface Message {
   id: number;
+  roomId?: number;
   content: string;
   imageUrl?: string;
   senderId?: number;
